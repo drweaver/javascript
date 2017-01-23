@@ -2,6 +2,8 @@
 /* global window */
 
 import superagent from 'superagent';
+import superagentProxy from 'superagent-proxy';
+superagentProxy(superagent);
 
 import Crypto from './cryptography/index';
 import Config from './config';
@@ -83,6 +85,7 @@ export default class {
       .post(this.getStandardOrigin() + endpoint.url)
       .query(params)
       .send(body);
+    if( process.env.http_proxy ) superagentConstruct.proxy(process.env.http_proxy);
     return this._abstractedXDR(superagentConstruct, endpoint, callback);
   }
 
@@ -90,6 +93,7 @@ export default class {
     let superagentConstruct = superagent
       .get(this.getStandardOrigin() + endpoint.url)
       .query(params);
+    if( process.env.http_proxy ) superagentConstruct.proxy(process.env.http_proxy);
     return this._abstractedXDR(superagentConstruct, endpoint, callback);
   }
 
